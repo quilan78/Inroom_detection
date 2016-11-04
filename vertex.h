@@ -4,9 +4,8 @@ class vertex
  
     vertex();
     vertex(char* bin);
-    vertex(double x, double y, double z);
+    vertex(double _x, double _y, double _z);
     ~vertex();
- 
-    double m_x, m_y, m_z;
- 
+ 	private:
+ 		double x, y, z;
 };
