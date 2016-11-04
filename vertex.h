@@ -1,5 +1,4 @@
-class vertex
-{
+class vertex {
     public:
  
     vertex();

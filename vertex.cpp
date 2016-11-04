@@ -1,5 +1,4 @@
-vertex::vertex(char* facet)
-{
+vertex::vertex(char* facet) {
 	char f1[4] = {facet[0],
 		facet[1],facet[2],facet[3]};
 
@@ -20,8 +19,7 @@ vertex::vertex(char* facet)
  
 }
 
-vertex::vertex(double _x, double _y, double _z)
-{
+vertex::vertex(double _x, double _y, double _z) {
 	x = _x;
 	y = _y;
 	z = _z;
