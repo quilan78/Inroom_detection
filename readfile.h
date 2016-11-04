@@ -1,1 +1,3 @@
-void read_stl(string fname, vector<tri> &v);
+#include "include.h"
+
+unsigned long read_stl(string fname, vector<triangle*> &v);

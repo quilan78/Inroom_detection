@@ -1,3 +1,4 @@
+#include "include.h"
 vertex::vertex(char* facet)
 {
 	char f1[4] = {facet[0],
@@ -16,8 +17,8 @@ vertex::vertex(char* facet)
 	x = double(xx);
 	y = double(yy);
 	z = double(zz);
- 
- 
+
+
 }
 
 vertex::vertex(double _x, double _y, double _z)
