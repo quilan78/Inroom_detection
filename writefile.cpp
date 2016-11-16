@@ -12,4 +12,3 @@ void write_stl(string fname, vector<triangle*> &v){
 		myFile  << v[i].getNorm() << v[i].getP1() << v[i].getP2() << v[i].getP3() << '\0' << '\0';
 	}
 }
-
