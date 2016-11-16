@@ -74,6 +74,7 @@ vertex* scene::getNormaleMaxixmum(float sensib) {
   }
   int maxi=0;
   for (unsigned int u =0; u<nbre_norm.size(); u++ ) {
+	cout<<nbre_norm[u]<<endl;
     if ( nbre_norm[u] > nbre_norm[maxi] ) {
       maxi = u;
     }
