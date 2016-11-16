@@ -6,3 +6,11 @@ triangle::triangle(vertex* _p1, vertex* _p2, vertex* _p3, vertex* _n) {
     p3 = _p3;
     n = _n;
 }
+
+bool triangle::comparerNormale(triangle t, float sensib) {
+  return ( n.scalaire(t->getN()) > 1-sensib);
+}
+
+bool triangle::comparerNormale(vertex n, float sensib) {
+  return ( n.scalaire(n) > 1-sensib);
+}
