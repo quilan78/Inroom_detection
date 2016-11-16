@@ -3,7 +3,7 @@ class scene {
   private:
     vector<triangle*> v;
     vector<triangle*> proj_carre;
-    void scene::calculerMoyenneNormales( vector<triangle*> triangles, vertex* normale);
+    void calculerMoyenneNormales( vector<triangle*> triangles, vertex* normale);
 
 
   public:
@@ -11,4 +11,4 @@ class scene {
     vertex* getNormaleMaxixmum(float sensib);
 
 
-}
+};

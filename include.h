@@ -3,9 +3,9 @@
 #include <vector>
 #include <string>
 #include <fstream>
-#include <math>
+#include <cmath>
 
 using namespace std;
 #include "vertex.h"
 #include "triangle.h"
-#include "listetriangle.h"
+#include "scene.h"

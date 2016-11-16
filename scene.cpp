@@ -17,7 +17,7 @@ unsigned long scene::read_stl(string fname){
     if (myFile) {
         myFile.read (header_info, 80);
         myFile.read(nTriChar, 4);
-        cout<<(int) nTriChar<<" "<<(int) nTriChar[1]<<" "<<(int) nTriChar[2]<<" "<<(int) nTriChar[3]<<endl;;
+        //cout<<(int) nTriChar<<" "<<(int) nTriChar[1]<<" "<<(int) nTriChar[2]<<" "<<(int) nTriChar[3]<<endl;;
         nTri = *((unsigned long*)nTriChar);
 
         for (unsigned long i=0; i<nTri; i++) {
@@ -44,19 +44,22 @@ unsigned long scene::read_stl(string fname){
 
 vertex* scene::getNormaleMaxixmum(float sensib) {
   vector<int> nbre_norm;
-  verctor<vertex*> moy_norm;
+  vector<vertex*> moy_norm;
   vector<vector<triangle*>> liste_triangle;
 
   nbre_norm.push_back(1);
   moy_norm.push_back(new vertex( v[0]->getN()->getX(), v[0]->getN()->getY(), v[0]->getN()->getZ() ) );
+  vector<triangle*> newV;
+	newV.push_back(v[0]);
+	liste_triangle.push_back(newV);
   bool ok=false;
-  for ( int i=1; i<v.size(); i++) {
+  for (unsigned int i=1; i<v.size(); i++) {
     ok = true;
-    for ( int u=0; u<nbre_norm.size(); u++ ) {
+    for (unsigned int u=0; u<nbre_norm.size(); u++ ) {
         if (v[i]->comparerNormale( moy_norm[u], sensib ) ) {
           nbre_norm[u] += 1;
           liste_triangle[u].push_back(v[i]);
-          calculerMoyenneNormales(liste_triangles[u], moy_norm[u]);
+          calculerMoyenneNormales(liste_triangle[u], moy_norm[u]);
           ok = false;
         }
     }
@@ -70,7 +73,7 @@ vertex* scene::getNormaleMaxixmum(float sensib) {
     }
   }
   int maxi=0;
-  for ( int u =0; u<nbre_norm.size(); u++ ) {
+  for (unsigned int u =0; u<nbre_norm.size(); u++ ) {
     if ( nbre_norm[u] > nbre_norm[maxi] ) {
       maxi = u;
     }
@@ -85,17 +88,17 @@ void scene::calculerMoyenneNormales( vector<triangle*> triangles, vertex* normal
     double y=0;
     double z=0;
 
-    for ( int i=0; i<triangles.size(); i++ ) {
-      x += triangle->getN()->getX();
-      y += triangle->getN()->getY();
-      z += triangle->getN()->getZ();
+    for ( unsigned int i=0; i<triangles.size(); i++ ) {
+      x += triangles[i]->getN()->getX();
+      y += triangles[i]->getN()->getY();
+      z += triangles[i]->getN()->getZ();
 
     }
     x = x/triangles.size();
     y = y/triangles.size();
     z = z/triangles.size();
 
-    normale.setX(x);
-    normale.setY(y);
-    normale.setZ(z);
+    normale->setX(x);
+    normale->setY(y);
+    normale->setZ(z);
 }

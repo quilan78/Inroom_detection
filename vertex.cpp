@@ -27,6 +27,6 @@ vertex::vertex(double _x, double _y, double _z) {
 	z = _z;
 }
 
-float vertex::scalaire(vertex v) {
-	 return sqrt(x*v.getX() + y*v.getY() + z*getZ());
+float vertex::scalaire(vertex* v) {
+	 return sqrt(x*v->getX() + y*v->getY() + z*v->getZ());
 }

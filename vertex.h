@@ -12,7 +12,7 @@ class vertex {
     void setY( double _y ) { y=_y; }
     void setZ( double _z ) { z=_z; }
 
-    float scalaire(vertex v);
+    float scalaire(vertex* v);
  	private:
  		double x, y, z;
 };
