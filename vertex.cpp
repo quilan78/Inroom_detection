@@ -20,6 +20,11 @@ vertex::vertex(char* facet)
 
 
 }
+vertex::vertex() {
+    x=0;
+    y=0;
+    z=0;
+}
 
 vertex::vertex(double _x, double _y, double _z) {
 	x = _x;
@@ -27,6 +32,51 @@ vertex::vertex(double _x, double _y, double _z) {
 	z = _z;
 }
 
+float vertex::norme() {
+    return sqrt(x*x+y*y+z*z);
+}
+
+void vertex::normaliser() {
+    float longueur = norme();
+    x = x/longueur;
+    cout<<longueur<<endl;
+    y = y/longueur;
+    z = z/longueur;
+}
+
+vertex* vertex::produitVectoriel(vertex* v) {
+    vertex* sortie = new vertex();
+    sortie->setX(y*v->getZ() - z*v->getY());
+    sortie->setY(z*v->getX() - x*v->getZ());
+    sortie->setX(x*v->getY() - y*v->getX());
+
+    return sortie;
+}
+
 float vertex::scalaire(vertex* v) {
 	 return sqrt(x*v->getX() + y*v->getY() + z*v->getZ());
+}
+
+vertex operator*(float a, vertex v) {
+    vertex* sortie = new vertex();
+    sortie->setX(a*v.getX());
+    sortie->setY(a*v.getY());
+    sortie->setZ(a*v.getZ());
+    return *sortie;
+}
+
+vertex operator-(vertex const v, vertex const u) {
+    vertex* sortie = new vertex();
+    sortie->setX(v.getX()-u.getX());
+    sortie->setY(v.getY()-u.getY());
+    sortie->setZ(v.getZ()-u.getZ());
+    return *sortie;
+}
+
+vertex operator+(vertex v, vertex u) {
+    vertex* sortie = new vertex();
+    sortie->setX(v.getX()+u.getX());
+    sortie->setY(v.getY()+u.getY());
+    sortie->setZ(v.getZ()+u.getZ());
+    return *sortie;
 }

@@ -54,6 +54,7 @@ vertex* scene::getNormaleMaxixmum(float sensib) {
 	liste_triangle.push_back(newV);
   bool ok=false;
   for (unsigned int i=1; i<v.size(); i++) {
+    cout<<"Traitement triangle "<<i<<endl;
     ok = true;
     for (unsigned int u=0; u<nbre_norm.size(); u++ ) {
         if (v[i]->comparerNormale( moy_norm[u], sensib ) ) {
@@ -79,6 +80,37 @@ vertex* scene::getNormaleMaxixmum(float sensib) {
       maxi = u;
     }
   }
+  cout<<nbre_norm[maxi]<<endl;
+ //Code qui va chercher un vecteur perpendiculaire au premier basé sur sa perpendicularité au "sol" et du nombre de triangles dedans
+    float sensibilites_test[4] = {0.001,0.01,0.1,1};
+    int second = -1;
+    for ( int i = 0; i<4 and second==-1; i++ ) {
+        for (unsigned int u =0; u<nbre_norm.size(); u++ ) {
+            if ( moy_norm[maxi]->scalaire(moy_norm[u]) > sensibilites_test[i]) {
+                if ( second == -1 ) {
+                    second = u;
+                }
+                else if ( nbre_norm[u] > nbre_norm[second] and u != maxi ) {
+                    second = u;
+                }
+
+            }
+        }
+    }
+
+    vertex* v1 = moy_norm[maxi];
+    vertex* v2 = moy_norm[second];
+    vertex* v3;
+    //Projection du second vecteur pour qu'il soit perpendiculaire au premier, normalisation et création du troisième vecteur
+    v1->normaliser();
+    *v2 = *v2 - v2->scalaire(v1) * (*v1);
+    cout<<"("<<v1->getX()<<","<<v1->getY()<<","<<v1->getZ()<<")"<<endl;
+    v3 = v1->produitVectoriel(v2);
+
+    cout<<"("<<v1->getX()<<","<<v1->getY()<<","<<v1->getZ()<<")"<<endl;
+    cout<<"("<<v2->getX()<<","<<v2->getY()<<","<<v2->getZ()<<")"<<endl;
+    cout<<"("<<v3->getX()<<","<<v3->getY()<<","<<v3->getZ()<<")"<<endl;
+
 
   return moy_norm[maxi];
 
