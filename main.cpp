@@ -10,6 +10,6 @@ int main() {
     unsigned long nbreTri = notreScene.read_stl(fichier);
     cout<<nbreTri<<endl;
 	vertex* a = notreScene.getNormaleMaxixmum(0.001);
-	cout<<"("<<a->getX()<<","<<a->getY()<<","<<a->getZ()<<")"<<endl;
+	//cout<<"("<<a->getX()<<","<<a->getY()<<","<<a->getZ()<<")"<<endl;
     return 0;
 }

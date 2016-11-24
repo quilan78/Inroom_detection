@@ -85,8 +85,10 @@ vertex* scene::getNormaleMaxixmum(float sensib) {
     float sensibilites_test[4] = {0.001,0.01,0.1,1};
     int second = -1;
     for ( int i = 0; i<4 and second==-1; i++ ) {
+        cout<<sensibilites_test[i]<<endl;
+
         for (unsigned int u =0; u<nbre_norm.size(); u++ ) {
-            if ( moy_norm[maxi]->scalaire(moy_norm[u]) > sensibilites_test[i]) {
+            if ( moy_norm[maxi]->scalaire(moy_norm[u]) < sensibilites_test[i]) {
                 if ( second == -1 ) {
                     second = u;
                 }
@@ -97,14 +99,11 @@ vertex* scene::getNormaleMaxixmum(float sensib) {
             }
         }
     }
-
-    vertex* v1 = moy_norm[maxi];
-    vertex* v2 = moy_norm[second];
-    vertex* v3;
+    v1 = moy_norm[maxi];
+    v2 = moy_norm[second];
     //Projection du second vecteur pour qu'il soit perpendiculaire au premier, normalisation et création du troisième vecteur
     v1->normaliser();
     *v2 = *v2 - v2->scalaire(v1) * (*v1);
-    cout<<"("<<v1->getX()<<","<<v1->getY()<<","<<v1->getZ()<<")"<<endl;
     v3 = v1->produitVectoriel(v2);
 
     cout<<"("<<v1->getX()<<","<<v1->getY()<<","<<v1->getZ()<<")"<<endl;
@@ -135,3 +134,23 @@ void scene::calculerMoyenneNormales( vector<triangle*> triangles, vertex* normal
     normale->setY(y);
     normale->setZ(z);
 }
+/*
+void projeterTriangles() {
+    for (unsigned int i=1; i<v.size(); i++) {
+        int maxi = getPlusGrandeComposante(v[i]);
+        double a = ver.scalaire(v1);
+        double b = ver.scalaire(v2);
+        double c = ver.scalaire(v3);
+        if ( maxi == 1) {
+            *v[i] = v1;
+        }
+        else if ( maxi == 2 ) {
+
+        }
+        else {
+
+        }
+
+    }
+}*/
+

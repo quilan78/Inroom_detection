@@ -32,6 +32,12 @@ vertex::vertex(double _x, double _y, double _z) {
 	z = _z;
 }
 
+vertex::vertex( vertex* v) {
+    x = v->getX();
+    y = v->getY();
+    z = v->getZ();
+}
+
 float vertex::norme() {
     return sqrt(x*x+y*y+z*z);
 }
@@ -39,7 +45,6 @@ float vertex::norme() {
 void vertex::normaliser() {
     float longueur = norme();
     x = x/longueur;
-    cout<<longueur<<endl;
     y = y/longueur;
     z = z/longueur;
 }
@@ -57,12 +62,13 @@ float vertex::scalaire(vertex* v) {
 	 return sqrt(x*v->getX() + y*v->getY() + z*v->getZ());
 }
 
-vertex operator*(float a, vertex v) {
-    vertex* sortie = new vertex();
-    sortie->setX(a*v.getX());
-    sortie->setY(a*v.getY());
-    sortie->setZ(a*v.getZ());
-    return *sortie;
+vertex operator*(double a, vertex v) {
+    vertex sortie;
+    cout<<a*v.getX()<<endl;
+    sortie.setX(a*v.getX());
+    sortie.setY(a*v.getY());
+    sortie.setZ(a*v.getZ());
+    return sortie;
 }
 
 vertex operator-(vertex const v, vertex const u) {
@@ -71,6 +77,18 @@ vertex operator-(vertex const v, vertex const u) {
     sortie->setY(v.getY()-u.getY());
     sortie->setZ(v.getZ()-u.getZ());
     return *sortie;
+}
+
+void vertex::soustraction(vertex* v) {
+    x = x - v->getX();
+    y = y - v->getY();
+    z = z - v->getZ();
+}
+
+void vertex::multiplication(double a) {
+    x = x*a;
+    y = y*a;
+    z = z*a;
 }
 
 vertex operator+(vertex v, vertex u) {
