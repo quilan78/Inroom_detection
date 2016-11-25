@@ -7,5 +7,6 @@
 
 using namespace std;
 #include "vertex.h"
+#include "plan.h"
 #include "triangle.h"
 #include "scene.h"

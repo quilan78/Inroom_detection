@@ -42,8 +42,25 @@ unsigned long scene::read_stl(string fname){
     return nTri;
 }
 
-vertex* scene::getNormaleMaxixmum(float sensib) {
-  vector<int> nbre_norm;
+void scene::write_stl(string fname){
+
+	ofstream myFile (fname.c_str(), ios::out |  ios::binary);
+	for(int i = 0; i < 80; i++) {
+		myFile << '\0';
+	}
+	unsigned long size = v.size();
+	myFile << (char)(size & 0xFF) << (char)((size >> 8) & 0xFF) << (char)((size >> 16) & 0xFF) << (char)((size >> 24) & 0xFF);
+	for(unsigned long i = 0; i < size; i++) {
+		myFile  << v[i]->getN()->getX()<<v[i]->getN()->getY()<<v[i]->getN()->getZ();
+		myFile << v[i]->getP1()->getX()<<v[i]->getP1()->getY()<<v[i]->getP1()->getZ();
+		myFile << v[i]->getP2()->getX()<<v[i]->getP2()->getY()<<v[i]->getP2()->getZ();
+		myFile <<v[i]->getP3()->getX()<<v[i]->getP3()->getY()<<v[i]->getP3()->getZ();
+		myFile << '\0' << '\0';
+	}
+}
+
+vertex* scene::createBase(float sensib) {
+  vector<long> nbre_norm;
   vector<vertex*> moy_norm;
   vector<vector<triangle*>> liste_triangle;
 
@@ -56,15 +73,15 @@ vertex* scene::getNormaleMaxixmum(float sensib) {
   for (unsigned int i=1; i<v.size(); i++) {
     cout<<"Traitement triangle "<<i<<endl;
     ok = true;
-    for (unsigned int u=0; u<nbre_norm.size(); u++ ) {
-        if (v[i]->comparerNormale( moy_norm[u], sensib ) ) {
+    for (unsigned int u=0; u<nbre_norm.size(); u++ ) { // On parcours les groupes existants à cette boucle
+        if (v[i]->comparerNormale( moy_norm[u], sensib ) ) { // On vérifie si le vecteur appartient au groupe u
           nbre_norm[u] += 1;
           liste_triangle[u].push_back(v[i]);
           calculerMoyenneNormales(liste_triangle[u], moy_norm[u]);
           ok = false;
         }
     }
-    if ( ok ) {
+    if ( ok ) { //Ce triangle n'appartient à aucun autre des groupes, on lui crée un nouyeau groupe
       nbre_norm.push_back(0);
       vector<triangle*> newV;
       newV.push_back(v[i]);
@@ -73,7 +90,9 @@ vertex* scene::getNormaleMaxixmum(float sensib) {
 
     }
   }
-  int maxi=0;
+
+  //On cherche la direction où il y en a le plus
+  unsigned int maxi=0;
   for (unsigned int u =0; u<nbre_norm.size(); u++ ) {
 	cout<<nbre_norm[u]<<endl;
     if ( nbre_norm[u] > nbre_norm[maxi] ) {
@@ -81,6 +100,7 @@ vertex* scene::getNormaleMaxixmum(float sensib) {
     }
   }
   cout<<nbre_norm[maxi]<<endl;
+
  //Code qui va chercher un vecteur perpendiculaire au premier basé sur sa perpendicularité au "sol" et du nombre de triangles dedans
     float sensibilites_test[4] = {0.001,0.01,0.1,1};
     int second = -1;
@@ -101,6 +121,7 @@ vertex* scene::getNormaleMaxixmum(float sensib) {
     }
     v1 = moy_norm[maxi];
     v2 = moy_norm[second];
+
     //Projection du second vecteur pour qu'il soit perpendiculaire au premier, normalisation et création du troisième vecteur
     v1->normaliser();
     *v2 = *v2 - v2->scalaire(v1) * (*v1);
@@ -109,6 +130,7 @@ vertex* scene::getNormaleMaxixmum(float sensib) {
     cout<<"("<<v1->getX()<<","<<v1->getY()<<","<<v1->getZ()<<")"<<endl;
     cout<<"("<<v2->getX()<<","<<v2->getY()<<","<<v2->getZ()<<")"<<endl;
     cout<<"("<<v3->getX()<<","<<v3->getY()<<","<<v3->getZ()<<")"<<endl;
+    cout<<v3->scalaire(v2)<<endl;
 
 
   return moy_norm[maxi];
@@ -116,6 +138,7 @@ vertex* scene::getNormaleMaxixmum(float sensib) {
 }
 
 void scene::calculerMoyenneNormales( vector<triangle*> triangles, vertex* normale) {
+    // On passe le vertex à modifier en argument
     double x=0;
     double y=0;
     double z=0;
@@ -124,7 +147,6 @@ void scene::calculerMoyenneNormales( vector<triangle*> triangles, vertex* normal
       x += triangles[i]->getN()->getX();
       y += triangles[i]->getN()->getY();
       z += triangles[i]->getN()->getZ();
-
     }
     x = x/triangles.size();
     y = y/triangles.size();
@@ -134,23 +156,128 @@ void scene::calculerMoyenneNormales( vector<triangle*> triangles, vertex* normal
     normale->setY(y);
     normale->setZ(z);
 }
-/*
-void projeterTriangles() {
-    for (unsigned int i=1; i<v.size(); i++) {
-        int maxi = getPlusGrandeComposante(v[i]);
-        double a = ver.scalaire(v1);
-        double b = ver.scalaire(v2);
-        double c = ver.scalaire(v3);
-        if ( maxi == 1) {
-            *v[i] = v1;
-        }
-        else if ( maxi == 2 ) {
 
+void scene::projeterTriangles() {
+    for (unsigned int i=1; i<v.size(); i++) {
+        double a = v[i]->getN()->scalaire(v1);
+        double b = v[i]->getN()->scalaire(v2);
+        double c = v[i]->getN()->scalaire(v3);
+        cout<<a<<" "<<b<<" "<<c<<endl;
+        if (a > b and a > c) {
+            v[i]->setN(v1);
+            proj_v1.push_back(v[i]);
+        }
+        else if ( b >a and  b>c ) {
+            v[i]->setN(v2);
+            proj_v2.push_back(v[i]);
         }
         else {
-
+            v[i]->setN(v3);
+            proj_v3.push_back(v[i]);
         }
 
     }
-}*/
+}
+
+void scene::detectionPlanV1(double sensib) {
+    detectionPlan(sensib, proj_v1, v1, v2, v3 );
+}
+
+void scene::detectionPlanV2(double sensib) {
+    detectionPlan(sensib, proj_v2, v2, v3, v1 );
+}
+
+void scene::detectionPlanV3(double sensib) {
+    detectionPlan(sensib, proj_v3, v3, v1, v2 );
+}
+
+void scene::detectionPlan(double sensib, vector<triangle*>triangles, vertex* axe1, vertex* axe2, vertex* axe3 ) {
+    vector<vector<vertex*> > plan_detectes; // Va stocker les groupes de plans
+    vector<double> hauteur_detectes; // Va stocker les hauteurs moyennes des différents groupes
+    bool ok;
+    vector<vertex*> newV;
+    newV.push_back(triangles[0]->moyenne());
+    plan_detectes.push_back(newV);
+    hauteur_detectes.push_back(triangles[0]->moyenne()->scalaire(axe1));
+
+    //cout<<"hello1"<<endl;
+
+    for(unsigned int i=1; i<triangles.size(); i++) { // On parcours tous les triangles de la liste
+        ok = true;
+        for (unsigned int u=0; u<hauteur_detectes.size(); u++ ) { // On parcours les groupes existants à cette boucle
+            if (triangles[i]->moyenne()->scalaire(axe1) > hauteur_detectes[u]-sensib and triangles[i]->moyenne()->scalaire(axe1) < hauteur_detectes[u]+sensib ) { // On vérifie si le vecteur appartient au groupe u
+                plan_detectes[u].push_back(triangles[i]->moyenne());
+                hauteur_detectes[u] = calculerHauteurMoyenne(plan_detectes[u], axe1);
+                ok = false;
+            }
+        }
+        if ( ok ) { //Ce triangle n'appartient à aucun autre des groupes, on lui crée un nouyeau groupe
+          vector<vertex*> newV;
+          newV.push_back(triangles[i]->moyenne());
+          plan_detectes.push_back(newV);
+          hauteur_detectes.push_back(triangles[i]->moyenne()->scalaire(axe1));
+
+        }
+
+        //cout<<"hello2"<<endl;
+    }
+
+    //cout<<"hello3"<<endl;
+    for(unsigned int i= 0; i< hauteur_detectes.size(); i++ ) {
+        plans.push_back(planEnglobantRectangulaire(plan_detectes[i], hauteur_detectes[i], axe1, axe2, axe3));
+    }
+
+
+
+}
+
+double scene::calculerHauteurMoyenne( vector<vertex*> vecteur, vertex* axe) {
+    double retour=0;
+
+    for ( unsigned int i=0; i<vecteur.size(); i++ ) {
+      retour += vecteur[i]->scalaire(axe);
+    }
+    retour = retour/vecteur.size();
+    return retour;
+}
+
+plan* scene::planEnglobantRectangulaire(vector<vertex*> points, double posAxe1, vertex* axe1, vertex* axe2, vertex* axe3 ) {
+    plan* retour = new plan; // On fait l'approximation que tous les points sont sur le même plan à peut prêt, on va donc raisonner en 2D
+    /*
+        Dans le plan :
+            P1 point y et z min
+            P2 point y max et z min
+            P3 point y min et z max
+            P4 point y max et z max
+    */
+    double minY= points[0]->scalaire(axe2);
+    double minZ= points[0]->scalaire(axe3);
+    double maxY= points[0]->scalaire(axe2);
+    double maxZ= points[0]->scalaire(axe3);
+    //cout<<"Wesh1"<<endl;
+    for ( unsigned int i=1; i<points.size(); i++) { //On parcours tous les points
+        //cout<<points[i]->getX()<<" "<<points[i]->getY()<<" "<<points[i]->getZ()<<endl;
+        double coordY = points[i]->scalaire(axe2);
+        double coordZ = points[i]->scalaire(axe3);
+        if ( coordY < minY )
+            minY = coordY;
+        if ( coordZ < minZ )
+            minZ = coordZ;
+        if ( coordY > maxY )
+            minY = coordY;
+        if ( coordZ > maxZ )
+            maxZ = coordZ;
+    }
+
+    //cout<<"Wesh2"<<endl;
+    //retour->setP1(*axe1);
+    //cout<<"Wesh3"<<endl;
+    //if ( maxZ != nan)
+    //cout<<maxZ * *axe2<<" "<<maxZ<<endl;
+    retour->setP2(posAxe1 * *axe1 + maxY * *axe2 + minZ * *axe3);
+    retour->setP1(posAxe1 * *axe1 + minY * *axe2 + maxZ * *axe3);
+    retour->setP1(posAxe1 * *axe1 + maxY * *axe2 + maxZ * *axe3);
+    retour->setNbre_triangles(points.size());
+    return retour;
+}
 

@@ -14,3 +14,11 @@ bool triangle::comparerNormale(triangle* t, float sensib) {
 bool triangle::comparerNormale(vertex* _n, float sensib) {
   return ( n->scalaire(_n) > 1-sensib);
 }
+
+vertex* triangle::moyenne() {
+    vertex* retour = new vertex;
+    retour->setX((p1->getX()+p2->getX()+p3->getX())/3);
+    retour->setY((p1->getY()+p2->getY()+p3->getY())/3);
+    retour->setZ((p1->getZ()+p2->getZ()+p3->getZ())/3);
+    return retour;
+}

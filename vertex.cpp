@@ -59,13 +59,14 @@ vertex* vertex::produitVectoriel(vertex* v) {
 }
 
 float vertex::scalaire(vertex* v) {
-	 return sqrt(x*v->getX() + y*v->getY() + z*v->getZ());
+	 return x*v->getX() + y*v->getY() + z*v->getZ();
 }
 
 vertex operator*(double a, vertex v) {
     vertex sortie;
-    cout<<a*v.getX()<<endl;
     sortie.setX(a*v.getX());
+    //cout<<a<<endl;
+    //cout<<sortie.getX()<<endl;
     sortie.setY(a*v.getY());
     sortie.setZ(a*v.getZ());
     return sortie;
@@ -97,4 +98,14 @@ vertex operator+(vertex v, vertex u) {
     sortie->setY(v.getY()+u.getY());
     sortie->setZ(v.getZ()+u.getZ());
     return *sortie;
+}
+
+ostream& operator<<( ostream& s, vertex* v) {
+    s<<"Point ("<<v->getX()<<","<<v->getY()<<","<<v->getZ()<<")"<<endl;
+    return s;
+}
+
+ostream& operator<<( ostream& s, vertex v) {
+    s<<"Point ("<<v.getX()<<","<<v.getY()<<","<<v.getZ()<<")"<<endl;
+    return s;
 }

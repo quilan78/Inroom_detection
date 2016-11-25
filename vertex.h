@@ -24,3 +24,5 @@ class vertex {
 vertex operator+(vertex v, vertex u);
 vertex operator-(vertex v, vertex u);
 vertex operator*(double a, vertex v);
+ostream& operator<<( ostream& s, vertex* v);
+ostream& operator<<( ostream& s, vertex v);
