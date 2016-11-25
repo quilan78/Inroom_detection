@@ -43,21 +43,43 @@ unsigned long scene::read_stl(string fname){
 }
 
 void scene::write_stl(string fname){
+  if(fname.size() = 0) {
+    fname = "file.stl";
+  } else if(fname.find(".stl", fname.size()-4)) {
+    fname += ".stl";
+  }
+  ofstream myFile (fname.c_str(), ios::out | ios::binary);
+  for(int i = 0; i < 80; i++) {
+    myFile << '\0';
+  }
+  char attribute[2] = "0";
+  unsigned long size = v.size();
+  if(!size) {
+    cout<<"Warning : writing empty STL file";
+  }
+  myFile << (char)(size & 0xFF) << (char)((size >> 8) & 0xFF) << (char)((size >> 16) & 0xFF) << (char)((size >> 24) & 0xFF);
+  for(unsigned long i = 0; i < size; i++) {
+    myFile.write((char*)v[i].getN().getX(), 4);
+    myFile.write((char*)v[i].getN().getY(), 4);
+    myFile.write((char*)v[i].getN().getZ(), 4);
 
-	ofstream myFile (fname.c_str(), ios::out |  ios::binary);
-	for(int i = 0; i < 80; i++) {
-		myFile << '\0';
-	}
-	unsigned long size = v.size();
-	myFile << (char)(size & 0xFF) << (char)((size >> 8) & 0xFF) << (char)((size >> 16) & 0xFF) << (char)((size >> 24) & 0xFF);
-	for(unsigned long i = 0; i < size; i++) {
-		myFile  << v[i]->getN()->getX()<<v[i]->getN()->getY()<<v[i]->getN()->getZ();
-		myFile << v[i]->getP1()->getX()<<v[i]->getP1()->getY()<<v[i]->getP1()->getZ();
-		myFile << v[i]->getP2()->getX()<<v[i]->getP2()->getY()<<v[i]->getP2()->getZ();
-		myFile <<v[i]->getP3()->getX()<<v[i]->getP3()->getY()<<v[i]->getP3()->getZ();
-		myFile << '\0' << '\0';
-	}
+    myFile.write((char*)v[i].getP1().getX(), 4);
+    myFile.write((char*)v[i].getP1().getY(), 4);
+    myFile.write((char*)v[i].getP1().getZ(), 4);
+    
+    myFile.write((char*)v[i].getP2().getX(), 4);
+    myFile.write((char*)v[i].getP2().getY(), 4);
+    myFile.write((char*)v[i].getP2().getZ(), 4);
+    
+    myFile.write((char*)v[i].getP3().getX(), 4);
+    myFile.write((char*)v[i].getP3().getY(), 4);
+    myFile.write((char*)v[i].getP3().getZ(), 4);
+    
+    myFile.write(attribute,2);
+    //myFile  << v[i].getNorm() << v[i].getP1() << v[i].getP2() << v[i].getP3() << '\0' << '\0';
+  }
 }
+
 
 vertex* scene::createBase(float sensib) {
   vector<long> nbre_norm;
