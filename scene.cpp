@@ -34,7 +34,7 @@ unsigned long scene::read_stl(string fname){
 
             myFile.read(vertexchar, 12);
             vertex* p3 = new vertex(vertexchar);
-
+            //cout<<p1<<p2<<p3;
             v.push_back( new triangle(p1, p2, p3, normal));
             myFile.read(trash, 2);
         }
@@ -43,7 +43,7 @@ unsigned long scene::read_stl(string fname){
 }
 
 void scene::write_stl(string fname){
-  if(fname.size() = 0) {
+  if(fname.size() == 0) {
     fname = "file.stl";
   } else if(fname.find(".stl", fname.size()-4)) {
     fname += ".stl";
@@ -59,23 +59,22 @@ void scene::write_stl(string fname){
   }
   myFile << (char)(size & 0xFF) << (char)((size >> 8) & 0xFF) << (char)((size >> 16) & 0xFF) << (char)((size >> 24) & 0xFF);
   for(unsigned long i = 0; i < size; i++) {
-    myFile.write((char*)v[i].getN().getX(), 4);
-    myFile.write((char*)v[i].getN().getY(), 4);
-    myFile.write((char*)v[i].getN().getZ(), 4);
+    /*myFile.write((char*)&(v[i]->getN()->getX()), 4);
+    myFile.write((char*)&(v[i]->getN()->getY()), 4);
+    myFile.write((char*)&(v[i]->getN()->getZ()), 4);
 
-    myFile.write((char*)v[i].getP1().getX(), 4);
-    myFile.write((char*)v[i].getP1().getY(), 4);
-    myFile.write((char*)v[i].getP1().getZ(), 4);
-    
-    myFile.write((char*)v[i].getP2().getX(), 4);
-    myFile.write((char*)v[i].getP2().getY(), 4);
-    myFile.write((char*)v[i].getP2().getZ(), 4);
-    
-    myFile.write((char*)v[i].getP3().getX(), 4);
-    myFile.write((char*)v[i].getP3().getY(), 4);
-    myFile.write((char*)v[i].getP3().getZ(), 4);
-    
-    myFile.write(attribute,2);
+    myFile.write((char*)&(v[i]->getP1()->getX()), 4);
+    myFile.write((char*)&(v[i]->getP1()->getY()), 4);
+    myFile.write((char*)&(v[i]->getP1()->getZ()), 4);
+
+    myFile.write((char*)&(v[i]->getP2()->getX()), 4);
+    myFile.write((char*)&(v[i]->getP2()->getY()), 4);
+    myFile.write((char*)&(v[i]->getP2()->getZ()), 4);
+
+    myFile.write((char*)&(v[i]->getP3()->getX()), 4);
+    myFile.write((char*)&(v[i]->getP3()->getY()), 4);
+    myFile.write((char*)&(v[i]->getP3()->getZ()), 4);/
+    myFile.write(attribute,2);*/
     //myFile  << v[i].getNorm() << v[i].getP1() << v[i].getP2() << v[i].getP3() << '\0' << '\0';
   }
 }
@@ -89,11 +88,15 @@ vertex* scene::createBase(float sensib) {
   nbre_norm.push_back(1);
   moy_norm.push_back(new vertex( v[0]->getN()->getX(), v[0]->getN()->getY(), v[0]->getN()->getZ() ) );
   vector<triangle*> newV;
-	newV.push_back(v[0]);
-	liste_triangle.push_back(newV);
+  newV.push_back(v[0]);
+  liste_triangle.push_back(newV);
+
+  //cout<<v[0]->getP1()<<v[0]->getP2()<<v[0]->getP3();
   bool ok=false;
   for (unsigned int i=1; i<v.size(); i++) {
-    cout<<"Traitement triangle "<<i<<endl;
+    if ( i % 1000 == 0) {
+        cout<<"Traitement triangle "<<i<<endl;
+    }
     ok = true;
     for (unsigned int u=0; u<nbre_norm.size(); u++ ) { // On parcours les groupes existants à cette boucle
         if (v[i]->comparerNormale( moy_norm[u], sensib ) ) { // On vérifie si le vecteur appartient au groupe u
@@ -130,7 +133,7 @@ vertex* scene::createBase(float sensib) {
         cout<<sensibilites_test[i]<<endl;
 
         for (unsigned int u =0; u<nbre_norm.size(); u++ ) {
-            if ( moy_norm[maxi]->scalaire(moy_norm[u]) < sensibilites_test[i]) {
+            if ( abs(moy_norm[maxi]->scalaire(moy_norm[u])) < sensibilites_test[i]) {
                 if ( second == -1 ) {
                     second = u;
                 }
@@ -147,12 +150,18 @@ vertex* scene::createBase(float sensib) {
     //Projection du second vecteur pour qu'il soit perpendiculaire au premier, normalisation et création du troisième vecteur
     v1->normaliser();
     *v2 = *v2 - v2->scalaire(v1) * (*v1);
+    vertex* v4 = new vertex;
+    v2->normaliser();
     v3 = v1->produitVectoriel(v2);
-
+    cout<<v1->norme()<<endl;
+    cout<<v2->norme()<<endl;
+    cout<<v3->norme()<<endl;
     cout<<"("<<v1->getX()<<","<<v1->getY()<<","<<v1->getZ()<<")"<<endl;
     cout<<"("<<v2->getX()<<","<<v2->getY()<<","<<v2->getZ()<<")"<<endl;
     cout<<"("<<v3->getX()<<","<<v3->getY()<<","<<v3->getZ()<<")"<<endl;
-    cout<<v3->scalaire(v2)<<endl;
+    cout<<v2->scalaire(v1)<<endl;
+    cout<<v2->scalaire(v3)<<endl;
+    cout<<v1->scalaire(v3)<<endl;
 
 
   return moy_norm[maxi];
@@ -184,7 +193,7 @@ void scene::projeterTriangles() {
         double a = v[i]->getN()->scalaire(v1);
         double b = v[i]->getN()->scalaire(v2);
         double c = v[i]->getN()->scalaire(v3);
-        cout<<a<<" "<<b<<" "<<c<<endl;
+        //cout<<a<<" "<<b<<" "<<c<<endl;
         if (a > b and a > c) {
             v[i]->setN(v1);
             proj_v1.push_back(v[i]);
@@ -278,7 +287,6 @@ plan* scene::planEnglobantRectangulaire(vector<vertex*> points, double posAxe1, 
     double maxZ= points[0]->scalaire(axe3);
     //cout<<"Wesh1"<<endl;
     for ( unsigned int i=1; i<points.size(); i++) { //On parcours tous les points
-        //cout<<points[i]->getX()<<" "<<points[i]->getY()<<" "<<points[i]->getZ()<<endl;
         double coordY = points[i]->scalaire(axe2);
         double coordZ = points[i]->scalaire(axe3);
         if ( coordY < minY )
@@ -297,8 +305,9 @@ plan* scene::planEnglobantRectangulaire(vector<vertex*> points, double posAxe1, 
     //if ( maxZ != nan)
     //cout<<maxZ * *axe2<<" "<<maxZ<<endl;
     retour->setP1(posAxe1 * *axe1 + maxY * *axe2 + minZ * *axe3);
-    retour->setP2(posAxe1 * *axe1 + minY * *axe2 + maxZ * *axe3);
-    retour->setP3(posAxe1 * *axe1 + maxY * *axe2 + maxZ * *axe3);
+    retour->setP2(posAxe1 * *axe1 + maxY * *axe2 + minZ * *axe3);
+    retour->setP3(posAxe1 * *axe1 + minY * *axe2 + maxZ * *axe3);
+    retour->setP4(posAxe1 * *axe1 + maxY * *axe2 + maxZ * *axe3);
     retour->setNbre_triangles(points.size());
     return retour;
 }

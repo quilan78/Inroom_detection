@@ -3,7 +3,7 @@
 
 
 int main() {
-    string fichier = "example.stl";
+    string fichier = "fichier1.stl";
     scene notreScene;
     cout<<"Nom du fichier à insérer : "<<endl;
     //cin>>fichier;
@@ -34,9 +34,11 @@ int main() {
         cout<<plans[i]->getP1()<<endl;
         cout<<plans[i]->getP2()<<endl;
         cout<<plans[i]->getP3()<<endl;
+        cout<<plans[i]->getP4()<<endl;
         cout<<"Nbre de triangles : "<<plans[i]->getNbre_triangles()<<endl;
         if (plans[i]->getNbre_triangles() > maxi  )
             maxi = plans[i]->getNbre_triangles();
+        cout<<endl<<endl;
     }
     cout<<maxi<<endl;
 

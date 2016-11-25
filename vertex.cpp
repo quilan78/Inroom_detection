@@ -53,7 +53,7 @@ vertex* vertex::produitVectoriel(vertex* v) {
     vertex* sortie = new vertex();
     sortie->setX(y*v->getZ() - z*v->getY());
     sortie->setY(z*v->getX() - x*v->getZ());
-    sortie->setX(x*v->getY() - y*v->getX());
+    sortie->setZ(x*v->getY() - y*v->getX());
 
     return sortie;
 }
