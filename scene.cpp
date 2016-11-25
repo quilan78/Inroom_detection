@@ -312,3 +312,55 @@ plan* scene::planEnglobantRectangulaire(vector<vertex*> points, double posAxe1, 
     return retour;
 }
 
+void filte() {
+    double moy;
+    for ( int i=0; i<plans.size(); i++ ) {
+        moy += plans.size();
+    }
+    moy = ((float)moy)/plans.size();
+
+    int i=0;
+    while ( i<plans.size()) {
+
+    }
+}
+
+void scene::writePlans() {
+  string fname;
+  cout<<"Nom du fichier de sortie des plans :"<<endl;
+  cin>>fname;
+  if(fname.size() == 0) {
+    fname = "plans.txt";
+  } else if(fname.find(".txt", fname.size()-4)) {
+    fname += ".txt";
+  }
+  ofstream myFile (fname.c_str(), ios::out | ios::binary);
+  myFile<<plans.size();
+  myFile<<" ";
+  for ( int i=0; i<plans.size(); i++ ) {
+    myFile<<plans[i]->getP1()->getX();
+    myFile<<" ";
+    myFile<<plans[i]->getP1()->getY();
+    myFile<<" ";
+    myFile<<plans[i]->getP1()->getZ();
+    myFile<<" ";
+    myFile<<plans[i]->getP2()->getX();
+    myFile<<" ";
+    myFile<<plans[i]->getP2()->getY();
+    myFile<<" ";
+    myFile<<plans[i]->getP2()->getZ();
+    myFile<<" ";
+    myFile<<plans[i]->getP3()->getX();
+    myFile<<" ";
+    myFile<<plans[i]->getP3()->getY();
+    myFile<<" ";
+    myFile<<plans[i]->getP3()->getZ();
+    myFile<<" ";
+    myFile<<plans[i]->getP4()->getX();
+    myFile<<" ";
+    myFile<<plans[i]->getP4()->getY();
+    myFile<<" ";
+    myFile<<plans[i]->getP4()->getZ();
+    myFile<<" ";
+  }
+}

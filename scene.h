@@ -8,6 +8,7 @@ class scene {
     vector<triangle*> proj_v2;
     vector<triangle*> proj_v3;
     vector<plan*> plans;
+    vector<plan*> plans_filtred;
     void calculerMoyenneNormales( vector<triangle*> triangles, vertex* normale);
     vertex* v1;
     vertex* v2;
@@ -24,7 +25,7 @@ class scene {
     void detectionPlanV1(double sensib);
     void detectionPlanV2(double sensib);
     void detectionPlanV3(double sensib);
-
+    void writePlans();
      vector<plan*>  getPlans() { return plans; }
      vector<triangle*>  getProj_v1() { return proj_v1; }
      vector<triangle*>  getProj_v2() { return proj_v2; }

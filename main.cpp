@@ -3,7 +3,7 @@
 
 
 int main() {
-    string fichier = "fichier1.stl";
+    string fichier = "example.stl";
     scene notreScene;
     cout<<"Nom du fichier à insérer : "<<endl;
     //cin>>fichier;
@@ -42,6 +42,7 @@ int main() {
     }
     cout<<maxi<<endl;
 
+    notreScene.writePlans();
 	//cout<<"("<<a->getX()<<","<<a->getY()<<","<<a->getZ()<<")"<<endl;
     return 0;
 }
