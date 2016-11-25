@@ -34,6 +34,7 @@
 		</Compiler>
 		<Unit filename="include.h" />
 		<Unit filename="main.cpp" />
+		<Unit filename="plan.h" />
 		<Unit filename="scene.cpp" />
 		<Unit filename="scene.h" />
 		<Unit filename="triangle.cpp" />
