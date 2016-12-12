@@ -3,7 +3,7 @@
 
 
 int main() {
-    string fichier = "example.stl";
+    string fichier = "nvx_mesh.stl";
     scene notreScene;
     cout<<"Nom du fichier à insérer : "<<endl;
     //cin>>fichier;

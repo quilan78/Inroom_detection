@@ -304,14 +304,14 @@ plan* scene::planEnglobantRectangulaire(vector<vertex*> points, double posAxe1, 
     //cout<<"Wesh3"<<endl;
     //if ( maxZ != nan)
     //cout<<maxZ * *axe2<<" "<<maxZ<<endl;
-    retour->setP1(posAxe1 * *axe1 + maxY * *axe2 + minZ * *axe3);
+    retour->setP1(posAxe1 * *axe1 + minY * *axe2 + minZ * *axe3);
     retour->setP2(posAxe1 * *axe1 + maxY * *axe2 + minZ * *axe3);
     retour->setP3(posAxe1 * *axe1 + minY * *axe2 + maxZ * *axe3);
     retour->setP4(posAxe1 * *axe1 + maxY * *axe2 + maxZ * *axe3);
     retour->setNbre_triangles(points.size());
     return retour;
 }
-
+/*
 void filte() {
     double moy;
     for ( int i=0; i<plans.size(); i++ ) {
@@ -319,13 +319,17 @@ void filte() {
     }
     moy = ((float)moy)/plans.size();
 
-    int i=0;
-    while ( i<plans.size()) {
+    for ( int i=0; i<plans.size(); i++ ) {
+        if ( plans[i]->getNbre_triangles() > moy)
+            plans_filtred.push_back(plans[i]);
 
     }
-}
+
+}*/
 
 void scene::writePlans() {
+   plans_filtred = plans;
+
   string fname;
   cout<<"Nom du fichier de sortie des plans :"<<endl;
   cin>>fname;
@@ -335,32 +339,32 @@ void scene::writePlans() {
     fname += ".txt";
   }
   ofstream myFile (fname.c_str(), ios::out | ios::binary);
-  myFile<<plans.size();
+  myFile<<plans_filtred.size();
   myFile<<" ";
-  for ( int i=0; i<plans.size(); i++ ) {
-    myFile<<plans[i]->getP1()->getX();
+  for ( int i=0; i<plans_filtred.size(); i++ ) {
+    myFile<<plans_filtred[i]->getP1()->getX();
     myFile<<" ";
-    myFile<<plans[i]->getP1()->getY();
+    myFile<<plans_filtred[i]->getP1()->getY();
     myFile<<" ";
-    myFile<<plans[i]->getP1()->getZ();
+    myFile<<plans_filtred[i]->getP1()->getZ();
     myFile<<" ";
-    myFile<<plans[i]->getP2()->getX();
+    myFile<<plans_filtred[i]->getP2()->getX();
     myFile<<" ";
-    myFile<<plans[i]->getP2()->getY();
+    myFile<<plans_filtred[i]->getP2()->getY();
     myFile<<" ";
-    myFile<<plans[i]->getP2()->getZ();
+    myFile<<plans_filtred[i]->getP2()->getZ();
     myFile<<" ";
-    myFile<<plans[i]->getP3()->getX();
+    myFile<<plans_filtred[i]->getP3()->getX();
     myFile<<" ";
-    myFile<<plans[i]->getP3()->getY();
+    myFile<<plans_filtred[i]->getP3()->getY();
     myFile<<" ";
-    myFile<<plans[i]->getP3()->getZ();
+    myFile<<plans_filtred[i]->getP3()->getZ();
     myFile<<" ";
-    myFile<<plans[i]->getP4()->getX();
+    myFile<<plans_filtred[i]->getP4()->getX();
     myFile<<" ";
-    myFile<<plans[i]->getP4()->getY();
+    myFile<<plans_filtred[i]->getP4()->getY();
     myFile<<" ";
-    myFile<<plans[i]->getP4()->getZ();
+    myFile<<plans_filtred[i]->getP4()->getZ();
     myFile<<" ";
   }
 }
