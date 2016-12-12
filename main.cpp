@@ -5,7 +5,7 @@
 int main() {
     string fichier = "nvx_mesh.stl";
     scene notreScene;
-    cout<<"Nom du fichier à insérer : "<<endl;
+    cout<<"Nom du fichier ï¿½ insï¿½rer : "<<endl;
     //cin>>fichier;
     unsigned long nbreTri = notreScene.read_stl(fichier);
     cout<<nbreTri<<endl;
@@ -41,7 +41,7 @@ int main() {
         cout<<endl<<endl;
     }
     cout<<maxi<<endl;
-
+    notreScene.filtre();
     notreScene.writePlans();
 	//cout<<"("<<a->getX()<<","<<a->getY()<<","<<a->getZ()<<")"<<endl;
     return 0;

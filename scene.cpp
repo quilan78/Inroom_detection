@@ -311,8 +311,8 @@ plan* scene::planEnglobantRectangulaire(vector<vertex*> points, double posAxe1, 
     retour->setNbre_triangles(points.size());
     return retour;
 }
-/*
-void filte() {
+
+void scene::filte() {
     double moy;
     for ( int i=0; i<plans.size(); i++ ) {
         moy += plans.size();
@@ -325,10 +325,10 @@ void filte() {
 
     }
 
-}*/
+}
 
 void scene::writePlans() {
-   plans_filtred = plans;
+   //plans_filtred = plans;
 
   string fname;
   cout<<"Nom du fichier de sortie des plans :"<<endl;
