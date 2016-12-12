@@ -304,6 +304,12 @@ plan* scene::planEnglobantRectangulaire(vector<vertex*> points, double posAxe1, 
     //cout<<"Wesh3"<<endl;
     //if ( maxZ != nan)
     //cout<<maxZ * *axe2<<" "<<maxZ<<endl;
+    vertex P1 = minY * *axe2 + minZ * *axe3;
+    vertex P2 = maxY * *axe2 + minZ * *axe3;
+    vertex p3 = minY * *axe2 + maxZ * *axe3;
+    vertex P4 = maxY * *axe2 + maxZ * *axe3;
+    cout<<P1<<P2<<P3<<P4;
+
     retour->setP1(posAxe1 * *axe1 + minY * *axe2 + minZ * *axe3);
     retour->setP2(posAxe1 * *axe1 + maxY * *axe2 + minZ * *axe3);
     retour->setP3(posAxe1 * *axe1 + minY * *axe2 + maxZ * *axe3);
