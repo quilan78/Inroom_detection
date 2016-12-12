@@ -98,15 +98,15 @@ vertex* scene::createBase(float sensib) {
         cout<<"Traitement triangle "<<i<<endl;
     }
     ok = true;
-    for (unsigned int u=0; u<nbre_norm.size(); u++ ) { // On parcours les groupes existants à cette boucle
-        if (v[i]->comparerNormale( moy_norm[u], sensib ) ) { // On vérifie si le vecteur appartient au groupe u
+    for (unsigned int u=0; u<nbre_norm.size(); u++ ) { // On parcours les groupes existants ï¿½ cette boucle
+        if (v[i]->comparerNormale( moy_norm[u], sensib ) ) { // On vï¿½rifie si le vecteur appartient au groupe u
           nbre_norm[u] += 1;
           liste_triangle[u].push_back(v[i]);
           calculerMoyenneNormales(liste_triangle[u], moy_norm[u]);
           ok = false;
         }
     }
-    if ( ok ) { //Ce triangle n'appartient à aucun autre des groupes, on lui crée un nouyeau groupe
+    if ( ok ) { //Ce triangle n'appartient ï¿½ aucun autre des groupes, on lui crï¿½e un nouyeau groupe
       nbre_norm.push_back(0);
       vector<triangle*> newV;
       newV.push_back(v[i]);
@@ -116,7 +116,7 @@ vertex* scene::createBase(float sensib) {
     }
   }
 
-  //On cherche la direction où il y en a le plus
+  //On cherche la direction oï¿½ il y en a le plus
   unsigned int maxi=0;
   for (unsigned int u =0; u<nbre_norm.size(); u++ ) {
 	cout<<nbre_norm[u]<<endl;
@@ -126,7 +126,7 @@ vertex* scene::createBase(float sensib) {
   }
   cout<<nbre_norm[maxi]<<endl;
 
- //Code qui va chercher un vecteur perpendiculaire au premier basé sur sa perpendicularité au "sol" et du nombre de triangles dedans
+ //Code qui va chercher un vecteur perpendiculaire au premier basï¿½ sur sa perpendicularitï¿½ au "sol" et du nombre de triangles dedans
     float sensibilites_test[4] = {0.001,0.01,0.1,1};
     int second = -1;
     for ( int i = 0; i<4 and second==-1; i++ ) {
@@ -147,7 +147,7 @@ vertex* scene::createBase(float sensib) {
     v1 = moy_norm[maxi];
     v2 = moy_norm[second];
 
-    //Projection du second vecteur pour qu'il soit perpendiculaire au premier, normalisation et création du troisième vecteur
+    //Projection du second vecteur pour qu'il soit perpendiculaire au premier, normalisation et crï¿½ation du troisiï¿½me vecteur
     v1->normaliser();
     *v2 = *v2 - v2->scalaire(v1) * (*v1);
     vertex* v4 = new vertex;
@@ -169,7 +169,7 @@ vertex* scene::createBase(float sensib) {
 }
 
 void scene::calculerMoyenneNormales( vector<triangle*> triangles, vertex* normale) {
-    // On passe le vertex à modifier en argument
+    // On passe le vertex ï¿½ modifier en argument
     double x=0;
     double y=0;
     double z=0;
@@ -224,7 +224,7 @@ void scene::detectionPlanV3(double sensib) {
 
 void scene::detectionPlan(double sensib, vector<triangle*>triangles, vertex* axe1, vertex* axe2, vertex* axe3 ) {
     vector<vector<vertex*> > plan_detectes; // Va stocker les groupes de plans
-    vector<double> hauteur_detectes; // Va stocker les hauteurs moyennes des différents groupes
+    vector<double> hauteur_detectes; // Va stocker les hauteurs moyennes des diffï¿½rents groupes
     bool ok;
     vector<vertex*> newV;
     newV.push_back(triangles[0]->moyenne());
@@ -235,14 +235,14 @@ void scene::detectionPlan(double sensib, vector<triangle*>triangles, vertex* axe
 
     for(unsigned int i=1; i<triangles.size(); i++) { // On parcours tous les triangles de la liste
         ok = true;
-        for (unsigned int u=0; u<hauteur_detectes.size(); u++ ) { // On parcours les groupes existants à cette boucle
-            if (triangles[i]->moyenne()->scalaire(axe1) > hauteur_detectes[u]-sensib and triangles[i]->moyenne()->scalaire(axe1) < hauteur_detectes[u]+sensib ) { // On vérifie si le vecteur appartient au groupe u
+        for (unsigned int u=0; u<hauteur_detectes.size(); u++ ) { // On parcours les groupes existants ï¿½ cette boucle
+            if (triangles[i]->moyenne()->scalaire(axe1) > hauteur_detectes[u]-sensib and triangles[i]->moyenne()->scalaire(axe1) < hauteur_detectes[u]+sensib ) { // On vï¿½rifie si le vecteur appartient au groupe u
                 plan_detectes[u].push_back(triangles[i]->moyenne());
                 hauteur_detectes[u] = calculerHauteurMoyenne(plan_detectes[u], axe1);
                 ok = false;
             }
         }
-        if ( ok ) { //Ce triangle n'appartient à aucun autre des groupes, on lui crée un nouyeau groupe
+        if ( ok ) { //Ce triangle n'appartient ï¿½ aucun autre des groupes, on lui crï¿½e un nouyeau groupe
           vector<vertex*> newV;
           newV.push_back(triangles[i]->moyenne());
           plan_detectes.push_back(newV);
@@ -273,7 +273,7 @@ double scene::calculerHauteurMoyenne( vector<vertex*> vecteur, vertex* axe) {
 }
 
 plan* scene::planEnglobantRectangulaire(vector<vertex*> points, double posAxe1, vertex* axe1, vertex* axe2, vertex* axe3 ) {
-    plan* retour = new plan; // On fait l'approximation que tous les points sont sur le même plan à peut prêt, on va donc raisonner en 2D
+    plan* retour = new plan; // On fait l'approximation que tous les points sont sur le mï¿½me plan ï¿½ peut prï¿½t, on va donc raisonner en 2D
     /*
         Dans le plan :
             P1 point y et z min
@@ -335,8 +335,6 @@ void scene::writePlans() {
     fname += ".txt";
   }
   ofstream myFile (fname.c_str(), ios::out | ios::binary);
-  myFile<<plans.size();
-  myFile<<" ";
   for ( int i=0; i<plans.size(); i++ ) {
     myFile<<plans[i]->getP1()->getX();
     myFile<<" ";
