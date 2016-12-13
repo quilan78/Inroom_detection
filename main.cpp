@@ -1,11 +1,10 @@
 #include "include.h"
 
 
-
 int main() {
     string fichier = "nvx_mesh.stl";
     scene notreScene;
-    cout<<"Nom du fichier � ins�rer : "<<endl;
+    cout<<"Nom du fichier à inserer : "<<endl;
     //cin>>fichier;
     unsigned long nbreTri = notreScene.read_stl(fichier);
     cout<<nbreTri<<endl;
@@ -46,3 +45,4 @@ int main() {
 	//cout<<"("<<a->getX()<<","<<a->getY()<<","<<a->getZ()<<")"<<endl;
     return 0;
 }
+

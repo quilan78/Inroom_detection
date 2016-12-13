@@ -26,7 +26,7 @@ class scene {
     void detectionPlanV2(double sensib);
     void detectionPlanV3(double sensib);
     void writePlans();
-    void filte();
+    void filtre();
      vector<plan*>  getPlans() { return plans; }
      vector<triangle*>  getProj_v1() { return proj_v1; }
      vector<triangle*>  getProj_v2() { return proj_v2; }
