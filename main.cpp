@@ -2,7 +2,7 @@
 
 
 int main() {
-    string fichier = "nvx_mesh.stl";
+    string fichier = "objet.stl";
     scene notreScene;
     cout<<"Nom du fichier à inserer : "<<endl;
     //cin>>fichier;
