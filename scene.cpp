@@ -79,6 +79,53 @@ void scene::write_stl(string fname){
   }
 }
 
+void scene::algoSansProjection(float sensib_scalaire, float sensib_hauteur) {
+  vector<long> nbre_norm;
+  vector<vertex*> moy_norm;
+  vector<vector<triangle*>> liste_triangle;
+
+  nbre_norm.push_back(1);
+  moy_norm.push_back(new vertex( v[0]->getN()->getX(), v[0]->getN()->getY(), v[0]->getN()->getZ() ) );
+  vector<triangle*> newV;
+  newV.push_back(v[0]);
+  liste_triangle.push_back(newV);
+
+  //cout<<v[0]->getP1()<<v[0]->getP2()<<v[0]->getP3();
+  bool ok=false;
+  for (unsigned int i=1; i<v.size(); i++) {
+    if ( i % 1000 == 0) {
+        cout<<"Traitement triangle "<<i<<endl;
+    }
+    ok = true;
+    for (unsigned int u=0; u<nbre_norm.size(); u++ ) { // On parcours les groupes existants � cette boucle
+        if (v[i]->comparerNormale( moy_norm[u], sensib_scalaire ) ) { // On v�rifie si le vecteur appartient au groupe u
+          nbre_norm[u] += 1;
+          liste_triangle[u].push_back(v[i]);
+          calculerMoyenneNormales(liste_triangle[u], moy_norm[u]);
+          ok = false;
+        }
+    }
+    if ( ok ) { //Ce triangle n'appartient � aucun autre des groupes, on lui cr�e un nouyeau groupe
+      nbre_norm.push_back(0);
+      vector<triangle*> newV;
+      newV.push_back(v[i]);
+      liste_triangle.push_back(newV);
+      moy_norm.push_back(new vertex( v[i]->getN()->getX(), v[i]->getN()->getY(), v[i]->getN()->getZ() ) );
+
+    }
+  }
+
+
+
+	for(unsigned int i=0; i<nbre_norm; i++ ){
+		vertex* axe2 = new vertex(-moy_norm[i]->getY(), moy_norm[i]->getX(), 0 );
+		axe2->normaliser();
+		vertex* axe3 = moy_norm[i]->produitVectoriel(axe2);
+		detectionPlan( sensib_hauteur, liste_triangle[i], moy_norm[i], axe2, axe3 )
+
+	}
+}
+
 
 vertex* scene::createBase(float sensib) {
   vector<long> nbre_norm;

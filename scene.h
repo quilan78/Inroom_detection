@@ -18,6 +18,7 @@ class scene {
     double calculerHauteurMoyenne( vector<vertex*> vecteur, vertex* axe);
     plan* planEnglobantRectangulaire(vector<vertex*> points, double posAxe1, vertex* axe1, vertex* axe2, vertex* axe3 );
   public:
+		void algoSansProjection(float sensib_scalaire, float sensib_hauteur); 
     unsigned long read_stl(string fname);
     void write_stl(string fname);
     vertex* createBase(float sensib);
