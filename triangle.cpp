@@ -8,11 +8,11 @@ triangle::triangle(vertex* _p1, vertex* _p2, vertex* _p3, vertex* _n) {
 }
 
 bool triangle::comparerNormale(triangle* t, float sensib) {
-  return ( n->scalaire(t->getN()) > 1-sensib);
+  return (( n->scalaire(t->getN()) > 1-sensib) or ( n->scalaire(t->getN()) < -1+sensib));
 }
 
 bool triangle::comparerNormale(vertex* _n, float sensib) {
-  return ( n->scalaire(_n) > 1-sensib);
+  return (( n->scalaire(_n) > 1-sensib) or ( n->scalaire(_n) < -1+sensib ) );
 }
 
 vertex* triangle::moyenne() {

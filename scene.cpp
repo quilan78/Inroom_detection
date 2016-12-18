@@ -237,9 +237,9 @@ void scene::calculerMoyenneNormales( vector<triangle*> triangles, vertex* normal
 
 void scene::projeterTriangles() {
     for (unsigned int i=1; i<v.size(); i++) {
-        double a = v[i]->getN()->scalaire(v1);
-        double b = v[i]->getN()->scalaire(v2);
-        double c = v[i]->getN()->scalaire(v3);
+        double a = abs(v[i]->getN()->scalaire(v1));
+        double b = abs(v[i]->getN()->scalaire(v2));
+        double c = abs(v[i]->getN()->scalaire(v3));
         //cout<<a<<" "<<b<<" "<<c<<endl;
         if (a > b and a > c) {
             v[i]->setN(v1);
@@ -303,6 +303,7 @@ void scene::detectionPlan(double sensib, vector<triangle*>triangles, vertex* axe
     //cout<<"hello3"<<endl;
     for(unsigned int i= 0; i< hauteur_detectes.size(); i++ ) {
         plans.push_back(planEnglobantRectangulaire(plan_detectes[i], hauteur_detectes[i], axe1, axe2, axe3));
+        cout<<plans[i]->getP1()<<plans[i]->getP2()<<plans[i]->getP3()<<plans[i]->getP4();
     }
 
 
@@ -351,10 +352,11 @@ plan* scene::planEnglobantRectangulaire(vector<vertex*> points, double posAxe1, 
     //cout<<"Wesh3"<<endl;
     //if ( maxZ != nan)
     //cout<<maxZ * *axe2<<" "<<maxZ<<endl;
-    vertex P1 = minY * *axe2 + minZ * *axe3;
-    vertex P2 = maxY * *axe2 + minZ * *axe3;
-    vertex p3 = minY * *axe2 + maxZ * *axe3;
-    vertex P4 = maxY * *axe2 + maxZ * *axe3;
+    vertex P1 = posAxe1 * *axe1 + minY * *axe2 + minZ * *axe3;
+    vertex P2 = posAxe1 * *axe1 + maxY * *axe2 + minZ * *axe3;
+    vertex P3 = posAxe1 * *axe1 + minY * *axe2 + maxZ * *axe3;
+    vertex P4 = posAxe1 * *axe1 + maxY * *axe2 + maxZ * *axe3;
+    cout<<"plannnn"<<endl;
     cout<<P1<<P2<<P3<<P4;
 
     retour->setP1(posAxe1 * *axe1 + minY * *axe2 + minZ * *axe3);
@@ -365,12 +367,13 @@ plan* scene::planEnglobantRectangulaire(vector<vertex*> points, double posAxe1, 
     return retour;
 }
 
-void scene::filte() {
-    double moy;
+void scene::filtre() {
+    double moy =0;
     for ( int i=0; i<plans.size(); i++ ) {
-        moy += plans.size();
+        moy += plans[i]->getNbre_triangles();
     }
     moy = ((float)moy)/plans.size();
+    cout<<"moyenne : "<<moy<<endl;
 
     for ( int i=0; i<plans.size(); i++ ) {
         if ( plans[i]->getNbre_triangles() > moy)
@@ -381,7 +384,7 @@ void scene::filte() {
 }
 
 void scene::writePlans() {
-   //plans_filtred = plans;
+   plans_filtred = plans;
 
   string fname;
   cout<<"Nom du fichier de sortie des plans :"<<endl;
