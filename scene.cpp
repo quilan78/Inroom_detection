@@ -82,7 +82,7 @@ void scene::write_stl(string fname){
 void scene::algoSansProjection(float sensib_scalaire, float sensib_hauteur) {
   vector<long> nbre_norm;
   vector<vertex*> moy_norm;
-  vector<vector<triangle*>> liste_triangle;
+  vector<vector<triangle*> > liste_triangle;
 
   nbre_norm.push_back(1);
   moy_norm.push_back(new vertex( v[0]->getN()->getX(), v[0]->getN()->getY(), v[0]->getN()->getZ() ) );
@@ -117,11 +117,11 @@ void scene::algoSansProjection(float sensib_scalaire, float sensib_hauteur) {
 
 
 
-	for(unsigned int i=0; i<nbre_norm; i++ ){
+	for(unsigned int i=0; i<nbre_norm.size(); i++ ){
 		vertex* axe2 = new vertex(-moy_norm[i]->getY(), moy_norm[i]->getX(), 0 );
 		axe2->normaliser();
 		vertex* axe3 = moy_norm[i]->produitVectoriel(axe2);
-		detectionPlan( sensib_hauteur, liste_triangle[i], moy_norm[i], axe2, axe3 )
+		detectionPlan( sensib_hauteur, liste_triangle[i], moy_norm[i], axe2, axe3 );
 
 	}
 }
@@ -130,7 +130,7 @@ void scene::algoSansProjection(float sensib_scalaire, float sensib_hauteur) {
 vertex* scene::createBase(float sensib) {
   vector<long> nbre_norm;
   vector<vertex*> moy_norm;
-  vector<vector<triangle*>> liste_triangle;
+  vector<vector<triangle*> > liste_triangle;
 
   nbre_norm.push_back(1);
   moy_norm.push_back(new vertex( v[0]->getN()->getX(), v[0]->getN()->getY(), v[0]->getN()->getZ() ) );
