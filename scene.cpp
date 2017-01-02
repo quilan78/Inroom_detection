@@ -384,7 +384,7 @@ void scene::filtre() {
 }
 
 void scene::writePlans() {
-   plans_filtred = plans;
+  // plans_filtred = plans;
 
   string fname;
   cout<<"Nom du fichier de sortie des plans :"<<endl;
