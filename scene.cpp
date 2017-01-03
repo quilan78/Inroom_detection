@@ -1,10 +1,15 @@
+////////////////////////////////////////////////////////////////////////////
+
+// Projet P1RV - David Tuckey, Armand Cadet
+
+// Fichier scene.cpp
+
+///////////////////////////////////////////////////////////////////////////
+
 #include "include.h"
 
 unsigned long scene::read_stl(string fname){
-
-    //!!
-    //don't forget ios::binary
-    //!!
+	// Lecture du fichier stl, qui crée les triangles à partir des coordonnées
     ifstream myFile ( fname.c_str(), ios::in | ios::binary);
 
     char header_info[80] = "";
@@ -17,7 +22,6 @@ unsigned long scene::read_stl(string fname){
     if (myFile) {
         myFile.read (header_info, 80);
         myFile.read(nTriChar, 4);
-        //cout<<(int) nTriChar<<" "<<(int) nTriChar[1]<<" "<<(int) nTriChar[2]<<" "<<(int) nTriChar[3]<<endl;;
         nTri = *((unsigned long*)nTriChar);
 
         for (unsigned long i=0; i<nTri; i++) {
@@ -43,6 +47,7 @@ unsigned long scene::read_stl(string fname){
 }
 
 void scene::write_stl(string fname){
+	// Fonction test qui ne fonctionne pas
   if(fname.size() == 0) {
     fname = "file.stl";
   } else if(fname.find(".stl", fname.size()-4)) {
@@ -80,32 +85,34 @@ void scene::write_stl(string fname){
 }
 
 void scene::algoSansProjection(float sensib_scalaire, float sensib_hauteur) {
-  vector<long> nbre_norm;
-  vector<vertex*> moy_norm;
-  vector<vector<triangle*> > liste_triangle;
+	// Algorithme numéro 2
+  vector<long> nbre_norm; // Tableau qui compte le nombre de triangles dans chaque groupes
+  vector<vertex*> moy_norm; // Tableau qui stocke la normale moyenne de chaque groupes
+  vector<vector<triangle*> > liste_triangle; // Tableau qui liste les triangles dans chaque groupe
 
+	// On initialise nos listes
   nbre_norm.push_back(1);
   moy_norm.push_back(new vertex( v[0]->getN()->getX(), v[0]->getN()->getY(), v[0]->getN()->getZ() ) );
   vector<triangle*> newV;
   newV.push_back(v[0]);
   liste_triangle.push_back(newV);
 
-  //cout<<v[0]->getP1()<<v[0]->getP2()<<v[0]->getP3();
   bool ok=false;
+	// Pour chaque triangle
   for (unsigned int i=1; i<v.size(); i++) {
     if ( i % 1000 == 0) {
         cout<<"Traitement triangle "<<i<<endl;
     }
     ok = true;
-    for (unsigned int u=0; u<nbre_norm.size(); u++ ) { // On parcours les groupes existants � cette boucle
-        if (v[i]->comparerNormale( moy_norm[u], sensib_scalaire ) ) { // On v�rifie si le vecteur appartient au groupe u
+    for (unsigned int u=0; u<nbre_norm.size(); u++ ) { // On parcours les groupes existants à cette boucle
+        if (v[i]->comparerNormale( moy_norm[u], sensib_scalaire ) ) { // On vérifie si le vecteur appartient au groupe u
           nbre_norm[u] += 1;
           liste_triangle[u].push_back(v[i]);
           calculerMoyenneNormales(liste_triangle[u], moy_norm[u]);
           ok = false;
         }
     }
-    if ( ok ) { //Ce triangle n'appartient � aucun autre des groupes, on lui cr�e un nouyeau groupe
+    if ( ok ) { //Ce triangle n'appartient � aucun autre des groupes, on lui cr�e un nouveau groupe
       nbre_norm.push_back(0);
       vector<triangle*> newV;
       newV.push_back(v[i]);
@@ -116,30 +123,32 @@ void scene::algoSansProjection(float sensib_scalaire, float sensib_hauteur) {
   }
 
 
-
+	// Pour chaque groupe de triangles
 	for(unsigned int i=0; i<nbre_norm.size(); i++ ){
-		vertex* axe2 = new vertex(-moy_norm[i]->getY(), moy_norm[i]->getX(), 0 );
+		vertex* axe2 = new vertex(-moy_norm[i]->getY(), moy_norm[i]->getX(), 0 ); // On crée l'axe numéro 2
 		axe2->normaliser();
 		vertex* axe3 = moy_norm[i]->produitVectoriel(axe2);
-		detectionPlan( sensib_hauteur, liste_triangle[i], moy_norm[i], axe2, axe3 );
+		detectionPlan( sensib_hauteur, liste_triangle[i], moy_norm[i], axe2, axe3 ); // On crée les plans dans le groupe
 
 	}
 }
 
 
 vertex* scene::createBase(float sensib) {
-  vector<long> nbre_norm;
-  vector<vertex*> moy_norm;
-  vector<vector<triangle*> > liste_triangle;
+	// Création de la base pour l'algorithme 1
+  vector<long> nbre_norm; // Tableau qui compte le nombre de triangles dans chaque groupes
+  vector<vertex*> moy_norm; // Tableau qui stocke la normale moyenne de chaque groupes
+  vector<vector<triangle*> > liste_triangle; // Tableau qui liste les triangles dans chaque groupe
 
+	// Initialisation des tableaux
   nbre_norm.push_back(1);
   moy_norm.push_back(new vertex( v[0]->getN()->getX(), v[0]->getN()->getY(), v[0]->getN()->getZ() ) );
   vector<triangle*> newV;
   newV.push_back(v[0]);
   liste_triangle.push_back(newV);
 
-  //cout<<v[0]->getP1()<<v[0]->getP2()<<v[0]->getP3();
   bool ok=false;
+	// Pour chaque triangles
   for (unsigned int i=1; i<v.size(); i++) {
     if ( i % 1000 == 0) {
         cout<<"Traitement triangle "<<i<<endl;
@@ -200,15 +209,6 @@ vertex* scene::createBase(float sensib) {
     vertex* v4 = new vertex;
     v2->normaliser();
     v3 = v1->produitVectoriel(v2);
-    cout<<v1->norme()<<endl;
-    cout<<v2->norme()<<endl;
-    cout<<v3->norme()<<endl;
-    cout<<"("<<v1->getX()<<","<<v1->getY()<<","<<v1->getZ()<<")"<<endl;
-    cout<<"("<<v2->getX()<<","<<v2->getY()<<","<<v2->getZ()<<")"<<endl;
-    cout<<"("<<v3->getX()<<","<<v3->getY()<<","<<v3->getZ()<<")"<<endl;
-    cout<<v2->scalaire(v1)<<endl;
-    cout<<v2->scalaire(v3)<<endl;
-    cout<<v1->scalaire(v3)<<endl;
 
 
   return moy_norm[maxi];
@@ -216,7 +216,7 @@ vertex* scene::createBase(float sensib) {
 }
 
 void scene::calculerMoyenneNormales( vector<triangle*> triangles, vertex* normale) {
-    // On passe le vertex � modifier en argument
+    // On passe le vertex à modifier en argument
     double x=0;
     double y=0;
     double z=0;
@@ -235,21 +235,22 @@ void scene::calculerMoyenneNormales( vector<triangle*> triangles, vertex* normal
     normale->setZ(z);
 }
 
-void scene::projeterTriangles() {
+void scene::projeterTriangles() { // "Projète" les triangles sur la base
+		//Pour chaque triangles
     for (unsigned int i=1; i<v.size(); i++) {
-        double a = abs(v[i]->getN()->scalaire(v1));
-        double b = abs(v[i]->getN()->scalaire(v2));
-        double c = abs(v[i]->getN()->scalaire(v3));
+        double a = abs(v[i]->getN()->scalaire(v1)); // Composant de la normales selon le premier vecteur de la base
+        double b = abs(v[i]->getN()->scalaire(v2));// Composant de la normales selon le deuxième vecteur de la base
+        double c = abs(v[i]->getN()->scalaire(v3));// Composant de la normales selon le troisième vecteur de la base
         //cout<<a<<" "<<b<<" "<<c<<endl;
-        if (a > b and a > c) {
+        if (a > b and a > c) { // On remplace la normale par v1
             v[i]->setN(v1);
             proj_v1.push_back(v[i]);
         }
-        else if ( b >a and  b>c ) {
+        else if ( b >a and  b>c ) { // On remplace la normale par v2
             v[i]->setN(v2);
             proj_v2.push_back(v[i]);
         }
-        else {
+        else { // On remplace la normale par v3
             v[i]->setN(v3);
             proj_v3.push_back(v[i]);
         }
@@ -257,15 +258,15 @@ void scene::projeterTriangles() {
     }
 }
 
-void scene::detectionPlanV1(double sensib) {
+void scene::detectionPlanV1(double sensib) { // Détection des plans pour les triangles à normale v1
     detectionPlan(sensib, proj_v1, v1, v2, v3 );
 }
 
-void scene::detectionPlanV2(double sensib) {
+void scene::detectionPlanV2(double sensib) {// Détection des plans pour les triangles à normale v2
     detectionPlan(sensib, proj_v2, v2, v3, v1 );
 }
 
-void scene::detectionPlanV3(double sensib) {
+void scene::detectionPlanV3(double sensib) {// Détection des plans pour les triangles à normale v3
     detectionPlan(sensib, proj_v3, v3, v1, v2 );
 }
 
@@ -297,10 +298,9 @@ void scene::detectionPlan(double sensib, vector<triangle*>triangles, vertex* axe
 
         }
 
-        //cout<<"hello2"<<endl;
     }
 
-    //cout<<"hello3"<<endl;
+		// Pour chaque hauteur, on crée la boite anglobante
     for(unsigned int i= 0; i< hauteur_detectes.size(); i++ ) {
         plans.push_back(planEnglobantRectangulaire(plan_detectes[i], hauteur_detectes[i], axe1, axe2, axe3));
         cout<<plans[i]->getP1()<<plans[i]->getP2()<<plans[i]->getP3()<<plans[i]->getP4();
@@ -311,6 +311,7 @@ void scene::detectionPlan(double sensib, vector<triangle*>triangles, vertex* axe
 }
 
 double scene::calculerHauteurMoyenne( vector<vertex*> vecteur, vertex* axe) {
+	// Calcul la hauteur moyenne des triangles d'un groupe de triangles
     double retour=0;
 
     for ( unsigned int i=0; i<vecteur.size(); i++ ) {
@@ -347,17 +348,6 @@ plan* scene::planEnglobantRectangulaire(vector<vertex*> points, double posAxe1, 
             maxZ = coordZ;
     }
 
-    //cout<<"Wesh2"<<endl;
-    //retour->setP1(*axe1);
-    //cout<<"Wesh3"<<endl;
-    //if ( maxZ != nan)
-    //cout<<maxZ * *axe2<<" "<<maxZ<<endl;
-    vertex P1 = posAxe1 * *axe1 + minY * *axe2 + minZ * *axe3;
-    vertex P2 = posAxe1 * *axe1 + maxY * *axe2 + minZ * *axe3;
-    vertex P3 = posAxe1 * *axe1 + minY * *axe2 + maxZ * *axe3;
-    vertex P4 = posAxe1 * *axe1 + maxY * *axe2 + maxZ * *axe3;
-    cout<<"plannnn"<<endl;
-    cout<<P1<<P2<<P3<<P4;
 
     retour->setP1(posAxe1 * *axe1 + minY * *axe2 + minZ * *axe3);
     retour->setP2(posAxe1 * *axe1 + maxY * *axe2 + minZ * *axe3);
@@ -368,6 +358,7 @@ plan* scene::planEnglobantRectangulaire(vector<vertex*> points, double posAxe1, 
 }
 
 void scene::filtre() {
+	// Filtre les plans créés
     double moy =0;
     for ( int i=0; i<plans.size(); i++ ) {
         moy += plans[i]->getNbre_triangles();
@@ -384,7 +375,7 @@ void scene::filtre() {
 }
 
 void scene::writePlans() {
-  // plans_filtred = plans;
+	// Ecriture des plans dans un fichier
 
   string fname;
   cout<<"Nom du fichier de sortie des plans :"<<endl;
@@ -395,8 +386,7 @@ void scene::writePlans() {
     fname += ".txt";
   }
   ofstream myFile (fname.c_str(), ios::out | ios::binary);
-  //myFile<<plans_filtred.size();
-  //myFile<<" ";
+	
   for ( int i=0; i<plans_filtred.size(); i++ ) {
     myFile<<plans_filtred[i]->getP1()->getX();
     myFile<<" ";
